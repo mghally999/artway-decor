@@ -1,0 +1,312 @@
+---
+import { BUNNY_BASE, MAX_IMAGES, STOP_AFTER_FAILS } from "@/lib/bunny";
+
+type Props = {
+  category: string;
+  project: string;
+  gridId?: string;
+};
+
+const { category, project, gridId = "galleryGrid" } = Astro.props as Props;
+
+const safeId = (s: string) => String(s).replace(/[^a-zA-Z0-9-_]/g, "-");
+const lightboxId = `bgl-${safeId(category)}-${safeId(project)}-lb`;
+
+const base = String(BUNNY_BASE || "https://artwaydecor.b-cdn.net").replace(/\/+$/g, "");
+---
+
+<!-- ✅ Only render lightbox -->
+<div class="bglLightbox" id={lightboxId} aria-hidden="true">
+  <div class="bglBackdrop" data-bgl-close></div>
+
+  <div class="bglPanel" role="dialog" aria-modal="true" aria-label="Image viewer">
+    <button class="bglClose" type="button" data-bgl-close aria-label="Close">✕</button>
+
+    <button class="bglNav bglPrev" type="button" data-bgl-prev aria-label="Previous">‹</button>
+
+    <figure class="bglStage">
+      <img class="bglStageImg" alt="" />
+      <figcaption class="bglCaption"><span class="bglCount">—</span></figcaption>
+    </figure>
+
+    <button class="bglNav bglNext" type="button" data-bgl-next aria-label="Next">›</button>
+  </div>
+</div>
+
+<style>
+  /* ✅ Only lightbox styles here */
+  .bglLightbox{
+    position:fixed !important;
+    inset:0 !important;
+    z-index:9999 !important;
+    display:none !important;
+  }
+  .bglLightbox[data-open="true"]{ display:block !important; }
+
+  .bglBackdrop{
+    position:absolute !important;
+    inset:0 !important;
+    background: rgba(0,0,0,.88) !important;
+  }
+
+  .bglPanel{
+    position:absolute !important;
+    inset:0 !important;
+    display:grid !important;
+    grid-template-columns: 64px 1fr 64px !important;
+    align-items:center !important;
+    padding:16px !important;
+    pointer-events:none !important;
+  }
+  .bglPanel *{ pointer-events:auto !important; }
+
+  .bglStage{
+    margin:0 !important;
+    max-width:1100px !important;
+    width:100% !important;
+    justify-self:center !important;
+    display:grid !important;
+    gap:10px !important;
+  }
+
+  .bglStageImg{
+    width:100% !important;
+    height: min(76vh, 820px) !important;
+    object-fit: contain !important;
+    object-position:center !important;
+    border-radius:14px !important;
+    background: rgba(255,255,255,.04) !important;
+
+    opacity:0;
+    transition: opacity .18s ease;
+  }
+  .bglStageImg.isLoaded{ opacity:1; }
+
+  .bglCaption{
+    color: rgba(255,255,255,.85) !important;
+    font-size:13px !important;
+    text-align:center !important;
+    letter-spacing:.03em !important;
+  }
+
+  .bglNav{
+    width:48px !important;
+    height:48px !important;
+    border-radius:999px !important;
+    border:1px solid rgba(255,255,255,.25) !important;
+    background: rgba(0,0,0,.35) !important;
+    color:#fff !important;
+    font-size:32px !important;
+    line-height:1 !important;
+    cursor:pointer !important;
+    user-select:none !important;
+  }
+  .bglPrev{ justify-self:start !important; }
+  .bglNext{ justify-self:end !important; }
+
+  .bglClose{
+    position:absolute !important;
+    top:14px !important;
+    right:14px !important;
+    width:42px !important;
+    height:42px !important;
+    border-radius:999px !important;
+    border:1px solid rgba(255,255,255,.25) !important;
+    background: rgba(0,0,0,.35) !important;
+    color:#fff !important;
+    font-size:18px !important;
+    cursor:pointer !important;
+  }
+
+  :global(body.bglNoScroll){ overflow:hidden !important; }
+</style>
+
+<script
+  is:inline
+  define:vars={{ lightboxId, category, project, base, MAX_IMAGES, STOP_AFTER_FAILS, gridId }}
+>
+  const grid = document.getElementById(gridId);
+  const lb = document.getElementById(lightboxId);
+
+  const exts = ["jpg", "jpeg", "png", "webp"];
+  const images = [];
+  let current = 0;
+  let failStreak = 0;
+  let touchStartX = null;
+
+  const stageImg = lb?.querySelector(".bglStageImg");
+  const countEl = lb?.querySelector(".bglCount");
+
+  function urlFor(i, ext){
+    return `${base}/${encodeURIComponent(category)}/${encodeURIComponent(project)}/${i}.${ext}`;
+  }
+
+  function probe(url){
+    return new Promise((resolve) => {
+      const im = new Image();
+      im.onload = () => resolve(true);
+      im.onerror = () => resolve(false);
+      im.src = url;
+    });
+  }
+
+  function setStage(i){
+    if(!stageImg || !images.length) return;
+    current = (i + images.length) % images.length;
+
+    stageImg.classList.remove("isLoaded");
+    const nextSrc = images[current];
+
+    const tmp = new Image();
+    tmp.onload = () => {
+      stageImg.src = nextSrc;
+      requestAnimationFrame(() => stageImg.classList.add("isLoaded"));
+    };
+    tmp.onerror = () => {
+      stageImg.src = nextSrc;
+      requestAnimationFrame(() => stageImg.classList.add("isLoaded"));
+    };
+    tmp.src = nextSrc;
+
+    if(countEl) countEl.textContent = `${current + 1} / ${images.length}`;
+  }
+
+  function open(i){
+    if(!images.length) return;
+    lb.setAttribute("data-open","true");
+    lb.setAttribute("aria-hidden","false");
+    document.body.classList.add("bglNoScroll");
+    setStage(i);
+  }
+
+  function close(){
+    lb.removeAttribute("data-open");
+    lb.setAttribute("aria-hidden","true");
+    document.body.classList.remove("bglNoScroll");
+  }
+
+  function next(){ if(images.length) setStage(current + 1); }
+  function prev(){ if(images.length) setStage(current - 1); }
+
+function addTile(url){
+  const idx = images.length;
+  images.push(url);
+
+  // Create card with same structure as categories page
+  const a = document.createElement("a");
+  a.className = "card";
+  a.href = "javascript:void(0)";
+  a.style.cssText = "display: block; width: 100%; height: 100%; text-decoration: none;";
+
+  const thumb = document.createElement("div");
+  thumb.className = "thumb";
+  thumb.style.cssText = "width: 100%; height: 382px; border-radius: 18px; overflow: hidden; background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.10);";
+
+  const img = document.createElement("img");
+  img.className = "img";
+  img.loading = "lazy";
+  img.decoding = "async";
+  img.src = url;
+  img.alt = `Image ${idx + 1}`;
+  img.style.cssText = "width: 100%; height: 100%; object-fit: cover; display: block;";
+
+  thumb.appendChild(img);
+  a.appendChild(thumb);
+
+  // Remove the meta section entirely to hide Image 1, Image 2, etc.
+  // Or keep just the "View →" text if you want
+  const meta = document.createElement("div");
+  meta.className = "meta";
+  meta.style.cssText = "padding-top: 14px; padding-bottom: 14px;";
+  
+  const p = document.createElement("p");
+  p.style.cssText = "margin: 0; color: rgba(245,247,251,.65); line-height: 1.5;";
+  
+  meta.appendChild(p);
+  a.appendChild(meta);
+
+  a.addEventListener("click", (e) => {
+    e.preventDefault();
+    open(idx);
+  });
+
+  grid.appendChild(a);
+}
+  lb.addEventListener("click", (e) => {
+    const t = e.target;
+    if(t && t.hasAttribute("data-bgl-close")) close();
+    if(t && t.hasAttribute("data-bgl-next")) next();
+    if(t && t.hasAttribute("data-bgl-prev")) prev();
+  });
+
+  window.addEventListener("keydown", (e) => {
+    if(!lb.hasAttribute("data-open")) return;
+    if(e.key === "Escape") close();
+    if(e.key === "ArrowRight") next();
+    if(e.key === "ArrowLeft") prev();
+  });
+
+  stageImg?.addEventListener("touchstart", (e) => {
+    touchStartX = e.touches?.[0]?.clientX ?? null;
+  }, { passive:true });
+
+  stageImg?.addEventListener("touchend", (e) => {
+    if(touchStartX == null) return;
+    const endX = e.changedTouches?.[0]?.clientX ?? touchStartX;
+    const dx = endX - touchStartX;
+    touchStartX = null;
+
+    if(Math.abs(dx) < 40) return;
+    if(dx < 0) next(); else prev();
+  }, { passive:true });
+
+  async function loadAll(){
+    console.log('Loading images for:', category, project);
+    console.log('Target grid ID:', gridId);
+    
+    if(!grid) {
+      console.error('Grid element not found:', gridId);
+      return;
+    }
+    
+    for(let i=1; i<=MAX_IMAGES; i++){
+      let found = false;
+
+      for(const ext of exts){
+        const url = urlFor(i, ext);
+        console.log('Testing URL:', url);
+        if(await probe(url)){
+          console.log('Found image:', url);
+          addTile(url);
+          found = true;
+          failStreak = 0;
+          break;
+        }
+      }
+
+      if(!found){
+        console.log('No image found for index:', i);
+        failStreak++;
+        if(failStreak >= STOP_AFTER_FAILS) {
+          console.log('Stopping after', STOP_AFTER_FAILS, 'consecutive failures');
+          break;
+        }
+      }
+    }
+
+    console.log('Total images found:', images.length);
+    
+    if(images.length && stageImg){
+      stageImg.src = images[0];
+      stageImg.classList.add("isLoaded");
+      if(countEl) countEl.textContent = `1 / ${images.length}`;
+    }
+  }
+
+  // Start loading when DOM is ready
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', loadAll);
+  } else {
+    loadAll();
+  }
+</script>

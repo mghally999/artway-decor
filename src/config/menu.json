@@ -1,0 +1,26 @@
+{
+  "main": [
+    { "name": "About", "url": "/about" },
+    { "name": "Services", "url": "/services" },
+    { "name": "Works", "url": "/projects" },
+    { "name": "Contact", "url": "/contact" }
+  ],
+  "footer": [
+    {
+      "title": "Quick Links",
+      "children": [
+        { "name": "About", "url": "/about" },
+        { "name": "Services", "url": "/services" },
+        { "name": "Works", "url": "/projects" },
+        { "name": "Contact", "url": "/contact" }
+      ]
+    },
+    {
+      "title": "Legal & Policy Links",
+      "children": [
+        { "name": "Privacy Policy", "url": "/privacy-policy" },
+        { "name": "Terms of Service", "url": "/terms-and-conditions" }
+      ]
+    }
+  ]
+}

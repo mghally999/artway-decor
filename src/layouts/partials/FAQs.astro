@@ -1,0 +1,141 @@
+---
+import Button from "@/components/Button.astro";
+import Accordion from "@/shortcodes/Accordion";
+import { markdownify } from "@/lib/utils/textConverter";
+
+/* ============================================================================
+   GLOBAL INTERIOR DESIGN FAQ DATA (USED EVERYWHERE)
+   Edit here → updates all pages automatically
+============================================================================ */
+const FAQS = [
+  {
+    question: "What interior design services do you provide?",
+    answer:
+      "We offer complete interior design and fit-out solutions including concept design, space planning, 3D visualization, material selection, bespoke furniture, project management, and turnkey execution for residential, commercial, and hospitality projects.",
+  },
+  {
+    question: "Do you handle both design and execution?",
+    answer:
+      "Yes. We manage the entire process from initial concept to final handover. This ensures consistency, quality control, budget accuracy, and timely delivery without relying on third parties.",
+  },
+  {
+    question: "How long does an interior design project take?",
+    answer:
+      "Project timelines depend on size and complexity. Residential projects typically take **6–10 weeks**, while commercial and hospitality projects may take **10–16 weeks** including approvals and execution.",
+  },
+  {
+    question: "Can you work within a fixed budget?",
+    answer:
+      "Absolutely. We tailor designs based on your budget while maintaining quality and aesthetics. All materials, finishes, and scopes are approved upfront to avoid unexpected costs.",
+  },
+  {
+    question: "Do you provide 3D designs before execution?",
+    answer:
+      "Yes. Detailed 3D visualizations and mood boards are provided before execution, allowing you to fully understand the design direction and request refinements before work begins.",
+  },
+  {
+    question: "Do you handle approvals and authority requirements?",
+    answer:
+      "Yes. We manage all required approvals including landlord approvals, mall management, and relevant authorities to ensure compliance with regulations.",
+  },
+  {
+    question: "Can you renovate or redesign existing spaces?",
+    answer:
+      "Yes. We specialize in renovation, remodeling, and upgrading existing spaces while minimizing disruption and optimizing functionality and aesthetics.",
+  },
+  {
+    question: "What types of projects do you specialize in?",
+    answer:
+      "We specialize in offices, restaurants, cafés, retail shops, salons, villas, apartments, and mixed-use commercial spaces.",
+  },
+  {
+    question: "Do you provide custom furniture and joinery?",
+    answer:
+      "Yes. All custom furniture, joinery, and cabinetry are designed and manufactured in-house to ensure precision, durability, and seamless integration with the design.",
+  },
+  {
+    question: "How do I get started with a project?",
+    answer:
+      "Simply contact us through our website or WhatsApp. We will schedule a consultation, understand your requirements, and provide a tailored proposal.",
+  },
+];
+
+/* ============================================================================
+   PROPS
+============================================================================ */
+type Props = {
+  isNoSectionBottom?: boolean;
+  isNoSectionTop?: boolean;
+};
+
+const { isNoSectionBottom = false, isNoSectionTop = false } = Astro.props;
+---
+
+<section
+  class={`section ${isNoSectionBottom && "pb-0"} ${isNoSectionTop && "pt-0"}`}
+>
+  <div class="container">
+    <div class="flex flex-col lg:flex-row items-center lg:items-start lg:justify-between">
+
+      <!-- LEFT TITLE -->
+      <div class={`lg:w-[25%] max-lg:text-center`}>
+        <p
+          data-aos="fade-up-sm"
+          data-aos-delay="150"
+          class="font-medium text-primary uppercase"
+        >
+          FAQS
+        </p>
+
+        <h2
+          data-aos="fade-up-sm"
+          data-aos-delay="200"
+          class="mt-3 font-medium text-primary pb-14"
+        >
+          Still Have Questions?
+        </h2>
+
+        <div data-aos="fade-up-sm" data-aos-delay="300">
+          <Button enable label="Contact Us" link="/contact" />
+        </div>
+      </div>
+
+      <!-- FAQ ACCORDIONS -->
+      <div class="max-lg:pt-10 lg:w-[70%] mx-auto">
+        {FAQS.map((item, index) => (
+          <div
+            data-aos="fade-left-sm"
+            data-aos-delay={index * 100 + 150}
+            class="mb-1"
+          >
+            <Accordion client:load title={item.question} id={index}>
+              <div set:html={markdownify(item.answer)} />
+            </Accordion>
+          </div>
+        ))}
+      </div>
+    </div>
+  </div>
+</section>
+
+<script is:inline>
+  document.addEventListener("astro:page-load", () => {
+    const accordions = document.querySelectorAll("[data-accordion-id]");
+
+    accordions.forEach((el, index) => {
+      const btn = el.querySelector("button");
+      if (!btn) return;
+
+      btn.addEventListener("click", () => {
+        accordions.forEach((otherEl) => {
+          const otherId = Number(otherEl.getAttribute("data-accordion-id"));
+          if (otherId !== index) {
+            window.dispatchEvent(
+              new CustomEvent(`accordion:close-${otherId}`)
+            );
+          }
+        });
+      });
+    });
+  });
+</script>

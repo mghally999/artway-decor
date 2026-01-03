@@ -1,0 +1,954 @@
+---
+import BlogCard from "@/components/BlogCard.astro";
+import ImageMod from "@/components/ImageMod.astro";
+import Base from "@/layouts/Base.astro";
+import { getListPage, getSinglePage } from "@/lib/contentParser.astro";
+import { markdownify } from "@/lib/utils/textConverter";
+import CallToAction from "@/partials/CallToAction.astro";
+import FAQs from "@/partials/FAQs.astro";
+import PageHeader from "@/partials/PageHeader.astro";
+import Testimonial from "@/partials/Testimonial.astro";
+
+const aboutIndex = await getListPage("about", "-index");
+if(aboutIndex.data.draft){
+  return Astro.redirect("/404");
+}
+const posts = await getSinglePage("blog");
+
+const {
+  title,
+  description,
+  images_gallery,
+  blog_section,
+} = aboutIndex.data;
+
+// List of client logos from your BunnyCDN
+const clientLogos = [
+  "arabica.png",
+  "boutiqaat.png", 
+  "cacharel.png",
+  "cafe-coton.png",
+  "damas.png",
+  "dar-al-teeb.png",
+  "dar-el-kamar.png",
+  "diamond-city.webp",
+  "hardees.png",
+  "jashanmal.png",
+  "jawhara.png",
+  "jumbo.png",
+  "kfc.png",
+  "le-caire.png",
+  "pizza-hut.png",
+  "roberto-cavalli.png",
+  "rodo.png",
+  "sarabeth.png",
+  "smat.webp",
+  "vintage.png",
+  "zaki.png"
+];
+
+const bunnyBaseUrl = "https://artwaydecor.b-cdn.net/projects-logos/logos/";
+---
+
+<Base {...aboutIndex.data}>
+  <PageHeader title={title} />
+
+  <!-- Main Content Section with Enhanced Visual Separation -->
+  <div class="main-content-wrapper">
+    
+    <!-- Hero Gallery Section -->
+    <section class="section section-gallery bg-gradient-to-b from-white to-gray-50/30">
+      <div class="container">
+        <!-- Section Title with Visual Separator -->
+        <div class="section-header">
+          <div class="title-decorator"></div>
+          <h2
+            class="section-title text-center"
+            set:html={markdownify(description || "At Art Way Decor, we transform spaces into timeless masterpieces with 20+ years of experience, blending craftsmanship with elegance to deliver bespoke interior solutions that captivate international brands and individual clients alike.")}
+          />
+          <div class="title-decorator"></div>
+        </div>
+
+        <!-- Gallery Grid with Enhanced Spacing -->
+        <div class="gallery-container">
+          <div class="flex flex-col lg:flex-row gap-8 lg:gap-12 items-start">
+            
+            <!-- First Column - Single Large Image -->
+            <div class="lg:w-[28%] gallery-column">
+              <div class="image-wrapper" data-aos="zoom-in-sm" data-aos-delay="150">
+                <div class="image-frame">
+                  <ImageMod
+                    src={images_gallery[0]}
+                    alt="Art Way Decor"
+                    width={294}
+                    height={352}
+                    class="object-cover w-full h-full rounded-lg"
+                  />
+                </div>
+                <div class="image-shadow"></div>
+              </div>
+            </div>
+
+            <!-- Second Column - Multiple Images -->
+            <div class="lg:w-[72%] flex flex-col gap-8 lg:gap-10">
+              
+              <!-- First Row of Images -->
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
+                <div class="gallery-item" data-aos="zoom-in-sm" data-aos-delay="200">
+                  <div class="image-frame">
+                    <ImageMod
+                      src={images_gallery[1]}
+                      alt="Art Way Decor Project"
+                      width={294}
+                      height={352}
+                      class="object-cover w-full h-full rounded-lg"
+                    />
+                  </div>
+                  <div class="image-shadow"></div>
+                </div>
+                
+                <div class="gallery-item" data-aos="zoom-in-sm" data-aos-delay="250">
+                  <div class="image-frame">
+                    <ImageMod
+                      src={images_gallery[2]}
+                      alt="Art Way Decor Design"
+                      width={290}
+                      height={258}
+                      class="object-cover w-full h-full rounded-lg"
+                    />
+                  </div>
+                  <div class="image-shadow"></div>
+                </div>
+                
+                <div class="gallery-item" data-aos="zoom-in-sm" data-aos-delay="300">
+                  <div class="image-frame">
+                    <ImageMod
+                      src={images_gallery[3]}
+                      alt="Art Way Decor Interior"
+                      width={263}
+                      height={310}
+                      class="object-cover w-full h-full rounded-lg"
+                    />
+                  </div>
+                  <div class="image-shadow"></div>
+                </div>
+              </div>
+
+              <!-- Second Row of Images -->
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8">
+                <div class="gallery-item" data-aos="zoom-in-sm" data-aos-delay="350">
+                  <div class="image-frame">
+                    <ImageMod
+                      src={images_gallery[4]}
+                      alt="Art Way Decor Luxury Design"
+                      width={390}
+                      height={258}
+                      class="object-cover w-full h-full rounded-lg"
+                    />
+                  </div>
+                  <div class="image-shadow"></div>
+                </div>
+                
+                <div class="gallery-item" data-aos="zoom-in-sm" data-aos-delay="400">
+                  <div class="image-frame">
+                    <ImageMod
+                      src={images_gallery[5]}
+                      alt="Art Way Decor Workspace"
+                      width={290}
+                      height={208}
+                      class="object-cover w-full h-full rounded-lg"
+                    />
+                  </div>
+                  <div class="image-shadow"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section Separator -->
+    <div class="section-divider">
+      <div class="separator-line"></div>
+      <div class="separator-dot"></div>
+      <div class="separator-line"></div>
+    </div>
+
+    <!-- Clients Section with Visual Contrast -->
+    <section class="section section-clients bg-primary/5">
+      <div class="container">
+        <div class="section-header">
+          <div class="title-decorator accent"></div>
+          <p
+            data-aos="fade-up-sm"
+            data-aos-delay="150"
+            class="section-subtitle uppercase"
+          >
+            OUR CLIENTS
+          </p>
+          <h2
+            data-aos="fade-up-sm"
+            data-aos-delay="200"
+            class="section-title"
+          >
+            Trusted by International Brands
+          </h2>
+          <div class="title-decorator accent"></div>
+        </div>
+
+        <div class="row g-8 justify-between items-center">
+          <div class="lg:col-5">
+            <div class="clients-description">
+              <p
+                data-aos="fade-up-sm"
+                data-aos-delay="300"
+                class="text-lg leading-relaxed"
+              >
+                Well-known for outstanding quality, we prioritize precision in every project. Our commitment to timely delivery, premium materials, and global clientele reflects our extensive experience and reliability in the market.
+              </p>
+            </div>
+          </div>
+          
+          <div class="lg:col-7">
+            <div class="client-stats">
+              <div class="stat-item" data-aos="fade-up-sm" data-aos-delay="350">
+                <div class="stat-number">100+</div>
+                <div class="stat-label">International Brands</div>
+              </div>
+              <div class="stat-item" data-aos="fade-up-sm" data-aos-delay="400">
+                <div class="stat-number">20+</div>
+                <div class="stat-label">Years Experience</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Walking Logo Ribbon -->
+        <div class="logos-section">
+          <div class="logos-container">
+            <div class="logos-ribbon-wrapper">
+              <div class="logos-ribbon">
+                <!-- First set of logos -->
+                {clientLogos.map((logo, i) => (
+                  <div class="logo-item" data-index={i}>
+                    <div class="logo-wrapper">
+                      <img 
+                        src={`${bunnyBaseUrl}${logo}`}
+                        alt={logo.replace('.png', '').replace('.webp', '').replace(/-/g, ' ')}
+                        class="logo-image"
+                        loading="lazy"
+                      />
+                    </div>
+                  </div>
+                ))}
+                <!-- Duplicated set for seamless loop -->
+                {clientLogos.map((logo, i) => (
+                  <div class="logo-item" data-index={i + clientLogos.length}>
+                    <div class="logo-wrapper">
+                      <img 
+                        src={`${bunnyBaseUrl}${logo}`}
+                        alt={logo.replace('.png', '').replace('.webp', '').replace(/-/g, ' ')}
+                        class="logo-image"
+                        loading="lazy"
+                      />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+            <div class="logos-gradient left"></div>
+            <div class="logos-gradient right"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+ 
+
+
+    <!-- Section Separator -->
+    <div class="section-divider">
+      <div class="separator-line"></div>
+      <div class="separator-dot"></div>
+      <div class="separator-line"></div>
+    </div>
+
+    <!-- Statistics Section with Visual Impact -->
+    <section class="section section-stats bg-gradient-to-b from-gray-50 to-white">
+      <div class="container">
+        <div class="section-header">
+          <div class="title-decorator accent"></div>
+          <p
+            data-aos="fade-up-sm"
+            data-aos-delay="150"
+            class="section-subtitle uppercase"
+          >
+            OUR IMPACT
+          </p>
+          <h2
+            data-aos="fade-up-sm"
+            data-aos-delay="200"
+            class="section-title"
+          >
+            Extensive Portfolio
+          </h2>
+          <div class="title-decorator accent"></div>
+        </div>
+
+        <div class="stats-container">
+          <div class="row g-8">
+            <div class="lg:col-4">
+              <div class="stats-intro" data-aos="fade-up-sm" data-aos-delay="250">
+                <p class="text-lg leading-relaxed text-gray-700">
+                  With decades of experience, we've transformed thousands of spaces across multiple sectors, delivering excellence in every project.
+                </p>
+              </div>
+            </div>
+            
+            <div class="lg:col-8">
+              <div class="stats-grid">
+                <div class="stat-card" data-aos="fade-up-sm" data-aos-delay="300">
+                  <div class="stat-card-inner">
+                    <div class="stat-number">482</div>
+                    <div class="stat-label">Offices Transformed</div>
+                    <div class="stat-description">Corporate spaces redesigned for productivity</div>
+                  </div>
+                </div>
+                
+                <div class="stat-card" data-aos="fade-up-sm" data-aos-delay="350">
+                  <div class="stat-card-inner">
+                    <div class="stat-number">97</div>
+                    <div class="stat-label">Luxury Villas</div>
+                    <div class="stat-description">Premium residential projects completed</div>
+                  </div>
+                </div>
+                
+                <div class="stat-card" data-aos="fade-up-sm" data-aos-delay="400">
+                  <div class="stat-card-inner">
+                    <div class="stat-number">342</div>
+                    <div class="stat-label">Retail Shops</div>
+                    <div class="stat-description">Commercial spaces enhanced for business</div>
+                  </div>
+                </div>
+                
+                <div class="stat-card" data-aos="fade-up-sm" data-aos-delay="450">
+                  <div class="stat-card-inner">
+                    <div class="stat-number">113</div>
+                    <div class="stat-label">Restaurants</div>
+                    <div class="stat-description">Hospitality venues crafted for experience</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="stats-footer" data-aos="fade-up-sm" data-aos-delay="500">
+            <p class="text-center text-lg text-gray-600">
+              <span class="font-semibold text-primary">934+ Satisfied Clients:</span> Join the ranks of clients who entrusted Art Way Decor to bring their visions to life with unmatched expertise.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- CTA with visual separation -->
+  <div class="cta-separator">
+    <div class="cta-divider"></div>
+  </div>
+
+  <CallToAction isNoSectionTop />
+  
+
+  
+  <FAQs isNoSectionTop />
+</Base>
+
+<style>
+  /* ===== Base Styles ===== */
+  :root {
+    --primary-color: #1a365d;
+    --primary-light: #2d4d8c;
+    --accent-color: #d4af37;
+    --accent-light: #e8d9a8;
+    --gray-50: #f9fafb;
+    --gray-100: #f3f4f6;
+    --gray-200: #e5e7eb;
+    --gray-300: #d1d5db;
+    --gray-400: #9ca3af;
+    --gray-500: #6b7280;
+    --gray-600: #4b5563;
+    --gray-700: #374151;
+    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+  }
+
+  /* ===== Main Content Wrapper ===== */
+  .main-content-wrapper {
+    background: linear-gradient(180deg, #ffffff 0%, var(--gray-50) 100%);
+  }
+
+  /* ===== Section Base ===== */
+  .section {
+    padding: 5rem 0;
+    position: relative;
+  }
+
+  .section-gallery {
+    background: linear-gradient(180deg, #ffffff 0%, var(--gray-50) 100%);
+    border-bottom: 1px solid var(--gray-200);
+  }
+
+  .section-clients {
+    background: linear-gradient(180deg, rgba(26, 54, 93, 0.03) 0%, rgba(26, 54, 93, 0.08) 100%);
+    border-bottom: 1px solid var(--gray-200);
+  }
+
+  .section-blog {
+    border-bottom: 1px solid var(--gray-200);
+  }
+
+  .section-stats {
+    border-bottom: 1px solid var(--gray-200);
+  }
+
+  /* ===== Section Headers ===== */
+  .section-header {
+    text-align: center;
+    margin-bottom: 4rem;
+    position: relative;
+  }
+
+  .section-title-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .section-subtitle {
+    font-size: 0.875rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    color: var(--accent-color);
+    margin-bottom: 0.5rem;
+  }
+
+  .section-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--primary-color);
+    line-height: 1.2;
+    margin-bottom: 1rem;
+  }
+
+  /* ===== Title Decorators ===== */
+  .title-decorator {
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--gray-300), transparent);
+    margin: 1rem auto;
+    width: 60%;
+    max-width: 200px;
+  }
+
+  .title-decorator.accent {
+    background: linear-gradient(90deg, transparent, var(--accent-color), transparent);
+  }
+
+  /* ===== Section Dividers ===== */
+  .section-divider {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem 0;
+    background: var(--gray-50);
+  }
+
+  .separator-line {
+    height: 1px;
+    background: linear-gradient(90deg, var(--gray-200), var(--gray-300), var(--gray-200));
+    flex: 1;
+    max-width: 200px;
+  }
+
+  .separator-dot {
+    width: 8px;
+    height: 8px;
+    background: var(--gray-400);
+    border-radius: 50%;
+    margin: 0 1.5rem;
+  }
+
+  .separator-dot.accent {
+    background: var(--accent-color);
+    box-shadow: 0 0 0 4px rgba(212, 175, 55, 0.1);
+  }
+
+  /* ===== Gallery Styles ===== */
+  .gallery-container {
+    margin-top: 3rem;
+  }
+
+  .gallery-column, .gallery-item {
+    position: relative;
+  }
+
+  .image-wrapper {
+    position: relative;
+    overflow: hidden;
+    border-radius: 1rem;
+  }
+
+  .image-frame {
+    position: relative;
+    overflow: hidden;
+    border-radius: 1rem;
+    transition: transform 0.3s ease;
+  }
+
+  .image-frame:hover {
+    transform: translateY(-4px);
+  }
+
+  .image-shadow {
+    position: absolute;
+    bottom: -10px;
+    left: 10%;
+    right: 10%;
+    height: 20px;
+    background: rgba(0, 0, 0, 0.1);
+    border-radius: 50%;
+    z-index: -1;
+  }
+
+  /* ===== Clients Section ===== */
+  .clients-description {
+    background: white;
+    padding: 2rem;
+    border-radius: 1rem;
+    box-shadow: var(--shadow-md);
+    border: 1px solid var(--gray-200);
+  }
+
+  .client-stats {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+  }
+
+  .stat-item {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 1rem;
+    text-align: center;
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--gray-200);
+  }
+
+  .stat-number {
+    font-size: 2.25rem;
+    font-weight: 700;
+    color: var(--primary-color);
+    margin-bottom: 0.25rem;
+  }
+
+  .stat-label {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--gray-600);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  /* ===== Logo Ribbon Styles ===== */
+  .logos-section {
+    margin-top: 4rem;
+    position: relative;
+  }
+
+  .logos-container {
+    position: relative;
+    overflow: hidden;
+    border-radius: 1rem;
+    background: white;
+    padding: 2rem 0;
+    box-shadow: var(--shadow-md);
+    border: 1px solid var(--gray-200);
+  }
+
+  .logos-ribbon-wrapper {
+    overflow: hidden;
+    padding: 1rem 0;
+  }
+
+  .logos-ribbon {
+    display: flex;
+    align-items: center;
+    gap: 3rem;
+    animation: slideLeft 40s linear infinite;
+    width: max-content;
+  }
+
+  .logo-item {
+    flex-shrink: 0;
+    padding: 0 1rem;
+  }
+
+  .logo-wrapper {
+    background: white;
+    padding: 1rem;
+    border-radius: 0.75rem;
+    box-shadow: var(--shadow-sm);
+    transition: all 0.3s ease;
+    border: 1px solid var(--gray-200);
+  }
+
+  .logo-wrapper:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+    border-color: var(--accent-light);
+  }
+
+  .logo-image {
+    height: 3rem;
+    width: auto;
+    object-fit: contain;
+    opacity: 0.8;
+    transition: all 0.3s ease;
+  }
+
+  .logo-wrapper:hover .logo-image {
+    opacity: 1;
+  }
+
+  .logos-gradient {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 100px;
+    pointer-events: none;
+    z-index: 2;
+  }
+
+  .logos-gradient.left {
+    left: 0;
+    background: linear-gradient(90deg, white, transparent);
+  }
+
+  .logos-gradient.right {
+    right: 0;
+    background: linear-gradient(270deg, white, transparent);
+  }
+
+  @keyframes slideLeft {
+    0% {
+      transform: translateX(0);
+    }
+    100% {
+      transform: translateX(-50%);
+    }
+  }
+
+  /* Pause animation on hover */
+  .logos-container:hover .logos-ribbon {
+    animation-play-state: paused;
+  }
+
+  /* ===== Blog Section ===== */
+  .blog-intro {
+    background: var(--gray-50);
+    padding: 2rem;
+    border-radius: 1rem;
+    border: 1px solid var(--gray-200);
+  }
+
+  .blog-cards-grid {
+    display: grid;
+    gap: 1.5rem;
+  }
+
+  .blog-card-placeholder {
+    background: linear-gradient(135deg, var(--gray-50), white);
+    padding: 2rem;
+    border-radius: 1rem;
+    border: 2px dashed var(--gray-300);
+    text-align: center;
+  }
+
+  .card-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--primary-color);
+    margin-bottom: 0.5rem;
+  }
+
+  .card-text {
+    color: var(--gray-600);
+  }
+
+  /* ===== Statistics Section ===== */
+  .stats-intro {
+    background: white;
+    padding: 2rem;
+    border-radius: 1rem;
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--gray-200);
+  }
+
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+  }
+
+  .stat-card {
+    background: white;
+    border-radius: 1rem;
+    overflow: hidden;
+    box-shadow: var(--shadow-md);
+    border: 1px solid var(--gray-200);
+    transition: all 0.3s ease;
+  }
+
+  .stat-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lg);
+    border-color: var(--accent-light);
+  }
+
+  .stat-card-inner {
+    padding: 2rem;
+    text-align: center;
+  }
+
+  .stat-card .stat-number {
+    font-size: 3rem;
+    font-weight: 800;
+    color: var(--primary-color);
+    margin-bottom: 0.5rem;
+    line-height: 1;
+  }
+
+  .stat-card .stat-label {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--gray-700);
+    margin-bottom: 0.5rem;
+  }
+
+  .stat-description {
+    font-size: 0.875rem;
+    color: var(--gray-500);
+    line-height: 1.4;
+  }
+
+  .stats-footer {
+    margin-top: 4rem;
+    padding-top: 3rem;
+    border-top: 1px solid var(--gray-200);
+  }
+
+  /* ===== CTA & FAQ Separators ===== */
+  .cta-separator, .faq-separator {
+    background: var(--gray-50);
+    padding: 3rem 0;
+  }
+
+  .cta-divider, .faq-divider {
+    height: 1px;
+    background: linear-gradient(90deg, 
+      transparent, 
+      var(--gray-300), 
+      var(--accent-color), 
+      var(--gray-300), 
+      transparent
+    );
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .faq-divider {
+    background: linear-gradient(90deg, 
+      transparent, 
+      var(--gray-300), 
+      var(--primary-light), 
+      var(--gray-300), 
+      transparent
+    );
+  }
+
+  /* ===== Responsive Styles ===== */
+  @media (max-width: 1024px) {
+    .section {
+      padding: 4rem 0;
+    }
+    
+    .section-title {
+      font-size: 2rem;
+    }
+    
+    .stats-grid,
+    .client-stats {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .logos-ribbon {
+      gap: 2rem;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .section {
+      padding: 3rem 0;
+    }
+    
+    .section-title {
+      font-size: 1.75rem;
+    }
+    
+    .section-header {
+      margin-bottom: 3rem;
+    }
+    
+    .gallery-container {
+      flex-direction: column;
+    }
+    
+    .gallery-column,
+    .gallery-item {
+      width: 100% !important;
+    }
+    
+    .stats-grid,
+    .client-stats {
+      grid-template-columns: 1fr;
+      gap: 1rem;
+    }
+    
+    .stat-card-inner {
+      padding: 1.5rem;
+    }
+    
+    .stat-card .stat-number {
+      font-size: 2.5rem;
+    }
+    
+    .logos-ribbon {
+      gap: 1.5rem;
+    }
+    
+    .logo-image {
+      height: 2.5rem;
+    }
+    
+    .logo-wrapper {
+      padding: 0.75rem;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .section {
+      padding: 2.5rem 0;
+    }
+    
+    .section-title {
+      font-size: 1.5rem;
+    }
+    
+    .title-decorator {
+      width: 40%;
+    }
+    
+    .clients-description,
+    .blog-intro,
+    .stats-intro {
+      padding: 1.5rem;
+    }
+    
+    .logos-container {
+      padding: 1rem 0;
+    }
+  }
+
+  /* ===== Animation Controls ===== */
+  @media (prefers-reduced-motion: reduce) {
+    .logos-ribbon {
+      animation: none;
+    }
+    
+    .image-frame:hover,
+    .logo-wrapper:hover,
+    .stat-card:hover {
+      transform: none;
+    }
+  }
+
+  /* ===== Print Styles ===== */
+  @media print {
+    .logos-ribbon {
+      animation: none;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    
+    .logos-gradient {
+      display: none;
+    }
+  }
+</style>
+
+<script>
+  document.addEventListener('astro:page-load', () => {
+    // Logo ribbon visibility control
+    const ribbonContainer = document.querySelector('.logos-container');
+    
+    if (ribbonContainer) {
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          const ribbon = entry.target.querySelector('.logos-ribbon');
+          if (ribbon) {
+            if (entry.isIntersecting) {
+              ribbon.style.animationPlayState = 'running';
+              ribbonContainer.style.opacity = '1';
+            } else {
+              ribbon.style.animationPlayState = 'paused';
+              ribbonContainer.style.opacity = '0.7';
+            }
+          }
+        });
+      }, { 
+        threshold: 0.1,
+        rootMargin: '50px'
+      });
+      
+      observer.observe(ribbonContainer);
+    }
+
+    // Add scroll-triggered animations
+    const animateOnScroll = () => {
+      const elements = document.querySelectorAll('[data-aos]');
+      
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.style.opacity = '1';
+            entry.target.style.transform = 'translateY(0)';
+          }
+        });
+      }, { threshold: 0.1 });
+      
+      elements.forEach(el => {
+        el.style.opacity = '0';
+        el.style.transform = 'translateY(20px)';
+        el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+        observer.observe(el);
+      });
+    };
+
+    // Initialize animations
+    setTimeout(animateOnScroll, 100);
+  });
+</script>

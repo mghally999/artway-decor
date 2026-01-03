@@ -1,0 +1,72 @@
+{
+  "villas": [
+    "al-manara-jumeirah",
+    "bluewaters-island-villa",
+    "damac-flora",
+    "jumeirah",
+    "nad-al-sheba-villa"
+  ],
+  "apartments": ["business-bay"],
+  "landscaping": ["al-wasl", "district-7"],
+  "offices": [
+    "abs",
+    "al-fattan-office",
+    "big-red",
+    "boutiqaat-office",
+    "levant-jewellery-head-office",
+    "nestle-office"
+  ],
+  "salons": [
+    "gentsmania-salon-spa",
+    "hush-gents-ladies-salon",
+    "ranim-john-beauty-salon-gents",
+    "ranim-john-beauty-salon-ladies",
+    "saks-salon",
+    "serenity-cosmetics",
+    "zaki-gents-salon"
+  ],
+  "retail-shops": [
+    "al-khaleejia-showroom",
+    "brooks",
+    "cacharel",
+    "caracal",
+    "damas-jewellery",
+    "dar-al-teeb-perfumes",
+    "fabrika",
+    "g-star-raw",
+    "jawhara-jewellery",
+    "kid-space",
+    "moccan-shop",
+    "network-al-ain-mall",
+    "network-mirdif",
+    "olabi-jewellery",
+    "roberto-cavalli-beach-jbr",
+    "roberto-cavalli-mall-of-emirates",
+    "rodo",
+    "tanjim"
+  ],
+  "restaurants-cafes": [
+    "arabica-coffee-shop",
+    "asia-kitchen",
+    "central-break-coffee-shop",
+    "dish-dash",
+    "hardee's",
+    "il-forno-dubai-hills",
+    "il-forno-silicon-central-mall",
+    "il-forno-yas-mall",
+    "kfc",
+    "kfc-food-court",
+    "khave-dounyasi",
+    "le-claire",
+    "o'doner",
+    "pizza-hut",
+    "qumasha",
+    "sarabeth-cafe",
+    "saravanaa-bhavan",
+    "smat",
+    "sotea",
+    "vintage-chocolate-lounge-beach-jbr",
+    "vintage-chocolate-lounge-dubai-mall",
+    "zero-cafe"
+  ]
+}

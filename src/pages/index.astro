@@ -1,0 +1,33 @@
+---
+import HeroBanner from "@/components/HeroBanner.astro";
+import Base from "@/layouts/Base.astro";
+import { getListPage } from "@/lib/contentParser.astro";
+import CallToAction from "@/partials/CallToAction.astro";
+import FAQs from "@/partials/FAQs.astro";
+import FunFacts from "@/partials/FunFacts.astro";
+import GallerySlider from "@/partials/GallerySlider.astro";
+import HomeProjectsSection from "@/partials/HomeProjectsSection.astro";
+import HomeServicesFactsSection from "@/partials/HomeServicesFactsSection.astro";
+import HomeServicesSection from "@/partials/HomeServicesSection.astro";
+import Testimonial from "@/partials/Testimonial.astro";
+
+const homepage = await getListPage(
+  "homepage",
+  "-index"
+);
+
+const { banner, gallery, fun_facts, services, services_facts, projects } =
+  homepage.data;
+---
+
+<Base>
+  <HeroBanner banner={banner} />
+  <GallerySlider gallery={gallery} />
+  <FunFacts funFacts={fun_facts} isNoSectionTop />
+  <Testimonial isNoSectionTop />
+  <HomeServicesSection services={services} />
+  <HomeServicesFactsSection services_facts={services_facts} />
+  <HomeProjectsSection projects={projects} />
+  <CallToAction isNoSectionTop />
+  <FAQs isNoSectionTop />
+</Base>

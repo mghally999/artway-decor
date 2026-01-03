@@ -1,0 +1,187 @@
+---
+import TwSizeIndicator from "@/components/TwSizeIndicator.astro";
+import config from "@/config/config.json";
+import theme from "@/config/theme.json";
+import { plainify } from "@/lib/utils/textConverter";
+import Footer from "@/partials/Footer.astro";
+import Header from "@/partials/Header.astro";
+import "@/styles/main.css";
+import {
+  GoogleTagmanager,
+  GoogleTagmanagerNoscript,
+} from "@digi4care/astro-google-tagmanager";
+import { AstroFont } from "astro-font";
+import { ClientRouter } from "astro:transitions";
+
+// types for frontmatters
+export interface Props {
+  title?: string;
+  meta_title?: string;
+  description?: string;
+  image?: string;
+  noindex?: boolean;
+  canonical?: string;
+}
+
+// destructure frontmatter
+const { title, meta_title, description, image, noindex, canonical } = Astro.props;
+
+// ========= Defaults you asked for =========
+const DEFAULT_SITE_TITLE = "Artway Decor – Turnkey Interior Design & Fit Out Company in Dubai";
+const DEFAULT_FAVICON = "/images/1.png";
+
+// ========= Fonts =========
+const pf = theme.fonts.font_family.primary;
+let fontPrimary: string | undefined;
+
+if (theme.fonts.font_family.primary) {
+  fontPrimary = theme.fonts.font_family.primary
+    .replace(/\+/g, " ")
+    .replace(/:[ital,]*[ital@]*[wght@]*[0-9,;.]+/gi, "");
+}
+
+// ========= Meta fallbacks =========
+const finalTitle = plainify(meta_title || title || config?.site?.title || DEFAULT_SITE_TITLE);
+
+const finalDescription = plainify(
+  description || config?.metadata?.meta_description || "Artway Decor – Turnkey Interior Design & Fit Out Company in Dubai"
+);
+
+const baseUrl = config?.site?.base_url || "";
+const ogUrl = `${baseUrl}/${Astro.url.pathname.replace("/", "")}`;
+
+// Prefer passed `image`, else config meta_image, else your logo
+const finalOgImage = `${baseUrl}${image || config?.metadata?.meta_image || DEFAULT_FAVICON}`;
+
+// favicon: force your logo
+const faviconHref = DEFAULT_FAVICON;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- google tag manager -->
+    {config.google_tag_manager.enable && (
+      <GoogleTagmanager id={config.google_tag_manager.gtm_id} />
+    )}
+
+    <!-- favicon -->
+    <link rel="icon" type="image/png" href={faviconHref} />
+    <link rel="apple-touch-icon" href={faviconHref} />
+
+    <!-- theme meta -->
+    <meta name="theme-name" content="NextSpace" />
+    <meta name="msapplication-TileColor" content="#000000" />
+    <meta name="theme-color" media="(prefers-color-scheme: light)" content="#fff" />
+    <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#000" />
+    <meta name="generator" content={Astro.generator} />
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+    <!-- google font css -->
+    <AstroFont
+      config={[
+        {
+          src: [],
+          preload: false,
+          display: "swap",
+          name: fontPrimary!,
+          fallback: "sans-serif",
+          cssVariable: "font-primary",
+          googleFontsURL: `https://fonts.googleapis.com/css2?family=${pf}&display=swap`,
+        },
+      ]}
+    />
+
+    <!-- responsive meta -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+
+    <!-- title -->
+    <title>{finalTitle}</title>
+
+    <!-- canonical url -->
+    {canonical && <link rel="canonical" href={canonical} item-prop="url" />}
+
+    <!-- noindex robots -->
+    {noindex && <meta name="robots" content="noindex,nofollow" />}
+
+    <!-- meta-description -->
+    <meta name="description" content={finalDescription} />
+
+    <ClientRouter />
+
+    <!-- author -->
+    <meta name="author" content={config?.metadata?.meta_author || "Artway Decor"} />
+
+    <!-- og -->
+    <meta property="og:title" content={finalTitle} />
+    <meta property="og:description" content={finalDescription} />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={ogUrl} />
+    <meta property="og:image" content={finalOgImage} />
+
+    <!-- twitter -->
+    <meta name="twitter:title" content={finalTitle} />
+    <meta name="twitter:description" content={finalDescription} />
+    <meta name="twitter:image" content={finalOgImage} />
+    <meta name="twitter:card" content="summary_large_image" />
+  </head>
+
+  <body class="overflow-x-hidden">
+    <!-- google tag manager noscript -->
+    {config.google_tag_manager.enable && (
+      <GoogleTagmanagerNoscript id={config.google_tag_manager.gtm_id} />
+    )}
+
+    <TwSizeIndicator />
+    <Header />
+
+    <main id="main-content">
+      <slot />
+    </main>
+
+    <Footer />
+
+    <script>
+      // AOS init
+      import AOS from "aos";
+      import "aos/dist/aos.css";
+
+      let scrollRef = 0;
+
+      // Fix `not animating although in viewport` issue
+      window.addEventListener("scroll", function () {
+        scrollRef <= 10 ? scrollRef++ : AOS.refresh();
+      });
+
+      function aosInit() {
+        AOS.init({
+          duration: 600,
+          offset: 100,
+          once: true,
+        });
+      }
+
+      function scriptInit() {
+        // Dropdown Menu Toggler For Mobile
+        const dropdownMenuToggler =
+          document.querySelectorAll(".nav-dropdown > .nav-link");
+
+        dropdownMenuToggler.forEach((toggler) => {
+          toggler?.addEventListener("click", (e) => {
+            const target = e.target;
+            target && target.parentElement?.classList.toggle("active");
+          });
+        });
+      }
+
+      document.addEventListener("astro:page-load", () => {
+        scriptInit();
+        aosInit();
+      });
+
+      document.addEventListener("astro:after-swap", () => {
+        aosInit();
+      });
+    </script>
+  </body>
+</html>

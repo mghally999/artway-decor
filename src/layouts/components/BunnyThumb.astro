@@ -1,0 +1,63 @@
+---
+import { bunnyUrl } from "@/lib/bunny";
+
+type Props = {
+  category: string;
+  project: string;
+  alt?: string;
+  class?: string;
+
+  // optional: make thumbs look fuller by zooming slightly
+  zoom?: number; // ex: 1.08
+};
+
+const {
+  category,
+  project,
+  alt = "",
+  class: className = "",
+  zoom = 1.08, // default zoom to avoid "empty" feel
+} = Astro.props;
+
+const mk = (name: string) => bunnyUrl(category, project, name);
+
+const src1 = mk("1.jpg");
+const src2 = mk("1.png");
+const src3 = mk("1.jpeg");
+const src4 = mk("1.webp");
+---
+
+<div class={`btWrap ${className}`}>
+  <img
+    src={src1}
+    alt={alt}
+    loading="lazy"
+    decoding="async"
+    data-step="1"
+    style={`transform: scale(${zoom});`}
+    onerror={`if(this.dataset.step==='1'){this.dataset.step='2';this.src='${src2}';}
+    else if(this.dataset.step==='2'){this.dataset.step='3';this.src='${src3}';}
+    else if(this.dataset.step==='3'){this.dataset.step='4';this.src='${src4}';}
+    else {this.remove();}`}
+  />
+</div>
+
+<style>
+  /* This makes the image ALWAYS fill the box */
+  .btWrap{
+    position: relative;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+  }
+  .btWrap > img{
+    position:absolute;
+    inset:0;
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    object-position:center;
+    display:block;
+    transform-origin:center;
+  }
+</style>

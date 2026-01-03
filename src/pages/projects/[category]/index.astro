@@ -1,0 +1,135 @@
+---
+import categories from "@/config/projectCategories.json";
+import projectsIndex from "@/config/projectsIndex.json";
+import BunnyThumb from "@/components/BunnyThumb.astro";
+
+export function getStaticPaths() {
+  return categories.map((c) => ({ params: { category: c.slug } }));
+}
+
+const { category } = Astro.params;
+
+const cat = categories.find((c) => c.slug === category);
+const projects = (projectsIndex[category] || []).map((slug) => ({
+  slug,
+  title: slug.replace(/-/g, " ").replace(/\b\w/g, (m) => m.toUpperCase()),
+}));
+---
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{cat?.title ?? category} · Projects</title>
+  </head>
+
+  <body>
+    <main class="wrap">
+      <a class="back" href="/projects">← Back</a>
+
+      <h1>{cat?.title ?? category}</h1>
+      <p class="sub">{category}</p>
+
+      <div class="grid">
+        {projects.map((p) => (
+          <a class="card" href={`/projects/${category}/${encodeURIComponent(p.slug)}`}>
+            <div class="thumb">
+              <BunnyThumb category={category} project={p.slug} alt={p.title} class="img" />
+            </div>
+
+            <div class="meta">
+              <h3>{p.title}</h3>
+              <p>Open →</p>
+            </div>
+          </a>
+        ))}
+      </div>
+    </main>
+
+    <style>
+      :root{
+        --bg:#0b0d10;
+        --text:#f5f7fb;
+        --muted: rgba(245,247,251,.65);
+
+        --card-w: 356.664px;
+        --thumb-h: 382px;
+        --gap: 24px;
+
+        --tile: rgba(255,255,255,.04);
+        --tileBorder: rgba(255,255,255,.10);
+      }
+      *{ box-sizing:border-box; }
+      html,body{ margin:0; padding:0; background:var(--bg); color:var(--text); }
+      a{ color:inherit; }
+
+      .wrap{
+        max-width:1200px;
+        margin:0 auto;
+        padding:40px 16px;
+        font-family: system-ui;
+      }
+      @media (max-width: 760px){ .wrap{ padding:28px 14px; } }
+
+      .back{
+        display:inline-block;
+        margin-bottom:14px;
+        text-decoration:none;
+        opacity:.8;
+      }
+      .back:hover{ opacity:1; }
+
+      h1{ font-size:34px; margin:0; }
+
+      .sub{
+        margin:8px 0 18px;
+        color: var(--muted);
+        text-transform: uppercase;
+        letter-spacing:.08em;
+        font-size:12px;
+      }
+
+      .grid{
+        display:grid;
+        gap: var(--gap);
+        grid-template-columns: repeat(3, minmax(0, var(--card-w)));
+        justify-content:center;
+      }
+
+      .card{
+        display:flex;
+        flex-direction:column;
+        width:100%;
+        max-width: var(--card-w);
+        text-decoration:none;
+      }
+
+      .thumb{
+        width:100%;
+        height: var(--thumb-h);
+        border-radius:18px;
+        overflow:hidden;
+        background: var(--tile);
+        border: 1px solid var(--tileBorder);
+      }
+
+      .img{
+        width:100%;
+        height:100%;
+        object-fit:cover;
+        display:block;
+      }
+
+      .meta{ padding-top:14px; }
+      .meta h3{ margin:0 0 8px; font-size:20px; font-weight:700; }
+      .meta p{ margin:0; color: var(--muted); line-height:1.5; }
+
+      @media (max-width:1180px){
+        .grid{ grid-template-columns: repeat(2, minmax(0, var(--card-w))); }
+      }
+      @media (max-width:760px){
+        .grid{ grid-template-columns: minmax(0, var(--card-w)); }
+      }
+    </style>
+  </body>
+</html>

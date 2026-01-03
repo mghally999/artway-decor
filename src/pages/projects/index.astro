@@ -1,0 +1,133 @@
+---
+import categories from "@/config/projectCategories.json";
+import projectsIndex from "@/config/projectsIndex.json";
+import BunnyThumb from "@/components/BunnyThumb.astro";
+
+const list = categories.map((c) => ({
+  ...c,
+  firstProject: (projectsIndex[c.slug] && projectsIndex[c.slug][0]) || null,
+}));
+---
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Projects</title>
+  </head>
+
+  <body>
+    <main class="wrap">
+      <h1>Projects</h1>
+
+      <div class="grid">
+        {list.map((c) => (
+          <a class="card" href={`/projects/${c.slug}`}>
+            <div class="thumb">
+              {c.firstProject ? (
+                <BunnyThumb
+                  category={c.slug}
+                  project={c.firstProject}
+                  alt={c.title}
+                  class="img"
+                />
+              ) : (
+                <div class="noimg">No images yet</div>
+              )}
+            </div>
+
+            <div class="meta">
+              <h3>{c.title}</h3>
+              <p>View projects →</p>
+            </div>
+          </a>
+        ))}
+      </div>
+    </main>
+
+    <style>
+      /* ✅ DARK THEME + RESET */
+      :root{
+        --bg:#0b0d10;
+        --text:#f5f7fb;
+        --muted: rgba(245,247,251,.65);
+
+        --card-w: 356.664px;
+        --thumb-h: 382px;
+        --gap: 24px;
+
+        --tile: rgba(255,255,255,.04);
+        --tileBorder: rgba(255,255,255,.10);
+      }
+      *{ box-sizing:border-box; }
+      html,body{ margin:0; padding:0; background:var(--bg); color:var(--text); }
+      a{ color:inherit; }
+
+      /* ✅ SAME WRAP USED EVERYWHERE */
+      .wrap{
+        max-width:1200px;
+        margin:0 auto;
+        padding:40px 16px;
+        font-family: system-ui;
+      }
+      @media (max-width: 760px){
+        .wrap{ padding:28px 14px; }
+      }
+
+      h1{ font-size:34px; margin:0 0 22px; }
+
+      /* ✅ Desktop: fixed card width */
+      .grid{
+        display:grid;
+        gap: var(--gap);
+        grid-template-columns: repeat(3, minmax(0, var(--card-w)));
+        justify-content:center;
+      }
+
+      .card{
+        display:flex;
+        flex-direction:column;
+        width:100%;
+        max-width: var(--card-w);
+        text-decoration:none;
+        color:inherit;
+      }
+
+      .thumb{
+        width:100%;
+        height: var(--thumb-h);
+        border-radius:18px;
+        overflow:hidden;
+        background: var(--tile);
+        border: 1px solid var(--tileBorder);
+      }
+
+      .img{
+        width:100%;
+        height:100%;
+        object-fit:cover;
+        display:block;
+      }
+
+      .noimg{
+        height:100%;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        color: var(--muted);
+        font-size: 14px;
+      }
+
+      .meta{ padding-top:14px; }
+      .meta h3{ margin:0 0 8px; font-size:20px; font-weight:700; }
+      .meta p{ margin:0; opacity:.75; line-height:1.5; color: var(--muted); }
+
+      @media (max-width:1180px){
+        .grid{ grid-template-columns: repeat(2, minmax(0, var(--card-w))); }
+      }
+      @media (max-width:760px){
+        .grid{ grid-template-columns: minmax(0, var(--card-w)); }
+      }
+    </style>
+  </body>
+</html>

@@ -1,0 +1,9 @@
+[
+  { "slug": "villas", "title": "Villas" },
+  { "slug": "offices", "title": "Offices" },
+  { "slug": "salons", "title": "Salons" },
+  { "slug": "retail-shops", "title": "Retail Shops" },
+  { "slug": "restaurants-cafes", "title": "Restaurants & Cafes" },
+  { "slug": "apartments", "title": "Apartments" },
+  { "slug": "landscaping", "title": "Landscaping" }
+]

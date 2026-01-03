@@ -1,0 +1,50 @@
+{
+  "site": {
+    "title": "Artway Decor – Turnkey Interior Design & Fit Out Company in Dubai",
+    "base_url": "https://artwaydecor.com/",
+    "base_path": "/",
+    "trailing_slash": false,
+    "favicon": "/images/1.png",
+    "logo": "/images/1.png",
+    "logo_footer": "/images/1.png",
+    "logo_width": "300",
+    "logo_height": "100%",
+    "logo_text": "Artway Decor"
+  },
+
+  "settings": {
+    "pagination": 6
+  },
+
+  "params": {
+    "contact_form_action": "#",
+    "address": "801, Ithraa Plaza, 2nd Street, Garhoud, Dubai, UAE",
+    "phone": "+971 50 247 9608",
+    "email": "info@artwaydecor.com",
+    "footer_title": "Ready To Build Your Dream Project?",
+    "footer_content": "Turnkey interior design & fit-out solutions tailored to your space — from concept to completion."
+  },
+
+  "navigation_button": {
+    "enable": true,
+    "label": "Chat On WhatsApp",
+    "link": "https://wa.me/971502479608?text=Hey%20I%27m%20interested%20in%20your%20interior%20design%20services.%20Can%20you%20share%20more%20details%20and%20a%20quotation%3F"
+  },
+
+  "footer_button": {
+    "enable": true,
+    "label": "Get Started",
+    "link": "/contact"
+  },
+
+  "google_tag_manager": {
+    "enable": false,
+    "gtm_id": "GTM-XXXXXX"
+  },
+
+  "metadata": {
+    "meta_author": "Artway Decor",
+    "meta_image": "/images/1.png",
+    "meta_description": "Artway Decor – Turnkey Interior Design & Fit Out Company in Dubai"
+  }
+}
